@@ -7,24 +7,47 @@ const Cart = function(items) {
 };
 
 Cart.prototype.addItem = function(product, quantity) {
+  this.items.push(new CartItem(product, quantity));
   // TODO: Fill in this instance method to create a new CartItem and add it to this.items
 };
 
 Cart.prototype.saveToLocalStorage = function() {
   // TODO: Fill in this ingtstance method to save the contents of the cart to localStorage
-};
+  let cartJson = JSON.stringify(this.items);
+  localStorage.setItem('cart', cartJson);
+  console.log(cartJson);
+}
 
 Cart.prototype.removeItem = function(item) {
   // TODO: Fill in this instance method to remove one item from the cart.
+  let remProduct = item.product.name;
+  let localCart = JSON.parse(localStorage.getItem('cart'));
+  let productIndex = 0;
+
+  // Get position of product in cart
+  for (let i = 0; i < localCart.length; i++) {
+    if(localCart[i].product===remProduct) {
+      productIndex = i;
+    }
+  }
+
+  // splice out product from array
+  localCart = localCart.splice(productIndex,1);
+  
+  let cartJson = JSON.stringify(localCart);
+  localStorage.removeItem('cart');
+  localStorage.setItem(cartJson);
+
   // Note: You will have to decide what kind of parameter to pass in here!
 };
 
 const CartItem = function(product, quantity) {
+  //product is an object
   this.product = product;
   this.quantity = quantity;
 };
 
-// Product contructor.
+// Product constructor.
 const Product = function(filePath, name) {
   this.filePath = filePath;
   this.name = name;
@@ -37,7 +60,7 @@ function generateCatalog() {
   new Product('assets/banana.jpg', 'Banana');
   new Product('assets/bathroom.jpg', 'Bathroom');
   new Product('assets/boots.jpg', 'Boots');
-  new Product('assets/breakfast.jpg', 'Breakfast');
+  new Product('assets,breakfast.jpg', 'Breakfast');
   new Product('assets/bubblegum.jpg', 'Bubblegum');
   new Product('assets/chair.jpg', 'Chair');
   new Product('assets/cthulhu.jpg', 'Cthulhu');
